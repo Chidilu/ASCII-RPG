@@ -15,7 +15,6 @@ class Map():
         self.map_data: list = []
         self.width: int = width
         self.height: int = height
-        self.map_info: dict[str, any]
         self.load_map()
     
     def load_map(self) -> None:
@@ -45,7 +44,7 @@ class Map():
         self.save_map()
 
     def generateMap(self) -> None:
-        self.map_data, self.map_info = mapGeneration_module.map_Generation(self.map_data)
+        self.map_data = mapGeneration_module.map_Generation(self.map_data)
 
     def display_map(self, character) -> None:
         char_x = character.x

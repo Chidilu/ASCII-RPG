@@ -37,8 +37,10 @@ def get_map_Icon(tile):
 def get_icon_colour(tile):
     return colours.colours_dict[_mapInfo[tile]['colour']]
 
-def map_Generation(map_data) -> None:
-    return map_data, {}
-
 def get_Map_Descriptions(tile):
     return _mapInfo[tile]['description']
+
+def generate_World(tile):
+    if tile.x == 1 and tile.y == 1:
+        return 'mountain'
+    return tile.tileName

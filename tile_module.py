@@ -1,5 +1,6 @@
 import colours
 from mapGeneration_module import get_map_Icon, get_Map_Descriptions, get_icon_colour, get_Map_Descriptions
+from mapGeneration_module import generate_World as map
 
 class Tile():
     def __init__(self, x, y, tileName,
@@ -29,12 +30,11 @@ class Tile():
         self.eventID = eventID
         self.isTrigger = isTrigger
         self.triggerID = triggerID
-        self.makeWorld()
+        self.generate_World()
 
-    def makeWorld(self):
-        if self.x == 1 and self.y == 1:
-            self.tileName = "forest"
-            self.update_tile()
+    def generate_World(self):
+        self.tileName = map(self)
+        self.update_tile()
 
     def update_tile(self):
         self.tileType = get_map_Icon(self.tileName)
