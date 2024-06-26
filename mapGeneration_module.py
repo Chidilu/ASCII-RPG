@@ -25,6 +25,25 @@ _mapInfo = {
         'elevation': 0,
         'description': "This is water",
         'colour': "BLUE"
+    },
+    'road': {
+        'icon': '-',
+        'elevation': 1,
+        'description': "This is a road",
+        'colour': "WHITE"
+    },
+    'gate': {
+        'icon': '▓',
+        'elevation': 2,
+        'description': "This is a gate",
+        'colour': "WHITE"
+    },
+    'walls': {
+        'icon': '█',
+        'elevation': 2,
+        'description': "This is a wall",
+        'colour': "BLACK",
+        'bg_colour': 'WHITE_BG'
     }
 }
 
@@ -41,6 +60,12 @@ def get_Map_Descriptions(tile):
     return _mapInfo[tile]['description']
 
 def generate_World(tile):
-    if tile.x == 1 and tile.y == 1:
+    if (tile.x < 7 and tile.x > 2) and (tile.y > 13 or tile.y < 7):
         return 'mountain'
     return tile.tileName
+
+def get_bg_colour(tile):
+    try:
+        return colours.colours_bg_dict[_mapInfo[tile]['bg_colour']]
+    except:
+        return colours.DEFAULT

@@ -30,11 +30,6 @@ class Tile():
         self.eventID = eventID
         self.isTrigger = isTrigger
         self.triggerID = triggerID
-        self.generate_World()
-
-    def generate_World(self):
-        self.tileName = map(self)
-        self.update_tile()
 
     def update_tile(self):
         self.tileType = get_map_Icon(self.tileName)

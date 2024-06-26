@@ -12,6 +12,12 @@ def main():
     map = map_module.Map(50, 50)
     hero: character_module.Character
 
+    map.create_biome_patch("forest", 'blob', 5, 5, 10)
+    map.create_biome_patch("mountain", 'circle', 20, 5, 5)
+    map.create_biome_patch('walls', 'rectangle', 40, 40, [5, 10])
+    map.create_biome_patch('gate', 'rectangle', 40, 45, [1, 1])
+    map.create_biome_patch('plain', 'rectangle', 41, 41, [3, 81])
+
     def show(key):
         nonlocal menu, play
         if hasattr(key, 'char'):

@@ -18,6 +18,17 @@ colours_dict = {
     'DEFAULT': "\033[0m"
 }
 
+colours_bg_dict = {
+    'BLACK_BG': '\033[40m',
+    'RED_BG': '\033[41m',
+    'GREEN_BG': '\033[42m',
+    'YELLOW_BG': '\033[43m',
+    'BLUE_BG': '\033[44m',
+    'PURPLE_BG': '\033[45m',
+    'CYAN_BG': '\033[46m',
+    'WHITE_BG': '\033[47m'
+}
+
 BLACK = '\033[30m'
 RED = '\033[31m'
 GREEN = '\033[32m'
