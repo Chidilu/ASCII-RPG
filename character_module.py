@@ -1,4 +1,5 @@
 from os import error
+import os
 import colours
 import json
 import map_module
@@ -30,18 +31,20 @@ character_Icons = {
 class Character():
     global character_Icons
 
-    def __init__(self, name: str, type: str, x: int =0, y: int =0, inv = {}) -> None:
+    def __init__(self, name: str, type: str, x: int =0, y: int =0, gold =0, inv = {}, health = 10, damage = 1, defense = 0) -> None:
         self.type = type
-        self.name = name
         self.x = x
         self.y = y
         self.colour = colours.colours_dict[character_Icons[self.type]['colour']]
+        self.name = f"{self.colour}{name}{colours.DEFAULT}"
         self.icon = character_Icons[self.type]['icon']
-        self.health = 10
-        self.attack = 1
         self.alive = True
         self.file = 'character.json'
+        self.gold = gold
         self.inventory = inv
+        self.health = health
+        self.damage = damage
+        self.defense = defense
 
     def move(self, x, y, map:map_module.Map) -> None:
         if (x == +1 and map.map_data[self.y][self.x + 1].isWalkable) or (x == -1 and map.map_data[self.y][self.x - 1].isWalkable):
@@ -55,11 +58,24 @@ class Character():
         raise error
 
     def attack(self, other):
-        other.health -= self.attack
-        print(f"{self.name} attacks {other.name} for {self.attack} damage.")
-        if other.health <= 0:
-            print(f"{other.name} has been defeated!")
-            other.alive = False
+        if self.alive and other.alive:
+            damage = self.damage - other.defense
+            if damage > 0:
+                other.health -= damage
+                if other.health <= 0:
+                    other.alive = False
+        return damage
+
+    def looting(self, other):
+        os.system('cls')
+        if not other.alive and other.gold > 0:
+            self.gold += other.gold
+            print(f"{self.name} looted {other.gold} gold from {other.name}")
+            input("Press Enter to continue...")
+        if len(other.inventory) > 2:
+            self.inventory.update(other.inventory)
+            print(f"{self.name} looted {list(other.inventory.keys())} from {other.name}")
+            input("Press Enter to continue...")
 
     def save_character(self) -> None:
         with open(self.file, 'w') as f:

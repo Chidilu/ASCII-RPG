@@ -2,7 +2,7 @@ import os
 from pynput.keyboard import Key, Listener
 import colours
 import map_module
-import character_module
+import character_module, player_module, fight_module
 import json
 import sys
 
@@ -10,9 +10,12 @@ def main():
     menu = True
     play = False
     play_Menu = False
+    fight = False
+    enemy: character_module.Character
 
     map: map_module.Map
-    hero: character_module.Character
+    hero: player_module.Player
+    entity_list = create_entities()
 
     def show(key):
         nonlocal menu, play, hero, map
@@ -92,7 +95,7 @@ def main():
                 if name == "":
                     name = f"{colours.PURPLE}Hero{colours.DEFAULT}"
                 map = map_module.Map(50, 50)
-                hero = character_module.Character(name, 'hero', 0, 0)
+                hero = player_module.Player(name)
                 play = True
                 menu = False
                 play_Menu = True
@@ -122,13 +125,29 @@ def main():
                 quit()
 
         while play:
+            for i in entity_list:
+                if hero.x == i.x and hero.y == i.y:
+                    enemy = i
+                    fight = True
+            if fight:
+                os.system('cls')
+                fight = fight_module.fighting(hero, enemy)
             os.system('cls')
-            map.display_map(hero)
-            print(f"{colours.YELLOW}Your Name: {hero.name}{colours.DEFAULT}")
+            map.display_map(hero, entity_list)
+            print(f"{colours.YELLOW}Your Position: X={hero.x} Y={hero.y}{colours.DEFAULT}")
             map.get_description(hero)
-            with Listener(on_press = show, suppress= True) as listener:   
+            with Listener(on_press = show, suppress= True) as listener:
                 listener.join()
 
+def create_entities():
+    entity_list: list[character_module.Character]
+    entity_list = []
+    entity_list.append(character_module.Character('Goblin', 'goblin', 10, 10, 5, {'sword': 1}))
+    entity_list.append(character_module.Character('Goblin', 'goblin', 10, 11, 5, {'sword': 1}))
+    
+    entity_list.append(character_module.Character('Orc', 'orc', 5, 4, 20, health= 20, damage= 2))
+
+    return entity_list
 
 def generate_new_map(map):
     map.create_biome_patch("forest", 'blob', 5, 5, 10)
@@ -138,21 +157,19 @@ def generate_new_map(map):
     map.create_biome_patch('plain', 'rectangle', 41, 41, [3, 81])
 
 def load_character():
-    file = 'character.json'
+    file = 'player.json'
     try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)
-            name, type, x, y = ['Hero', 'hero', 0, 0,]
+            name, x, y = ['Hero', 0, 0,]
             for i in save_Dict.items():
                 if i[0] == 'name':
                     name = i[1]
-                elif i[0] == 'type':
-                    type = i[1]
                 elif i[0] == 'x':
                     x = i[1]
                 elif i[0] == 'y':
                     y = i[1]
-            return character_module.Character(name, type, x, y)
+            return player_module.Player(name, x, y)
     except FileNotFoundError as e:
         print(e)
         sys.exit()
@@ -164,8 +181,8 @@ def load_character():
         sys.exit()
 
 def load_map() -> None:
-        file = 'map.json'
-    # try:
+    file = 'map.json'
+    try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)
             width, height, save_Tile_dict = [50, 50, {}]
@@ -218,15 +235,15 @@ def load_map() -> None:
                     map.set_tile(x, y, tileName, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, nPCID, isEvent,eventID, isTrigger, triggerID)
             return map
     
-    # except FileNotFoundError as e:
-    #     print(e)
-    #     map.make_map()
-    # except json.JSONDecodeError as e:
-    #     print(f"Error parsing JSON: {e}")
-    #     sys.exit()
-    # except Exception as e:
-    #     print(f"Error initializing map: {e}")
-    #     sys.exit()
+    except FileNotFoundError as e:
+        print(e)
+        map.make_map()
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON: {e}")
+        sys.exit()
+    except Exception as e:
+        print(f"Error initializing map: {e}")
+        sys.exit()
 
 
 if __name__ == "__main__":

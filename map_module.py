@@ -23,16 +23,16 @@ class Map():
     def make_map(self) -> None:
         self.map_data = [[tile_module.Tile(k, i, 'plain') for k in range(self.width)] for i in range(self.height)]
     
-    def set_tile(self, x, y, tileName, isWalkable, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID):
+    def set_tile(self, x, y, tileName, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID):
         if x < 0 or y < 0 or x >= self.width or y >= self.height:
             raise ValueError("Tile coordinates out of bounds")
-        self.map_data[y][x] = tile_module.Tile(x, y, tileName, isWalkable, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID)
+        self.map_data[y][x] = tile_module.Tile(x, y, tileName, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID)
 
     def get_description(self, character):
         print(f"{self.map_data[character.y][character.x].tileDescription}")
 
 
-    def display_map(self, character) -> None:
+    def display_map(self, character, entity_list) -> None:
         char_x = character.x
         char_y = character.y
         start_x = max(char_x - 2, 0)
@@ -60,7 +60,7 @@ class Map():
             for x in range(start_x, end_x):
                 if y == char_y and x == char_x:
                     print(f'{character.colour}{character.icon}{colours.DEFAULT}', end=' ')
-                else:
+                elif y != char_y or x != char_x:
                     if self.map_data[y][x].tileType == '█' and self.map_data[y][x].tileType != None:
                         if self.map_data[y][x].x < end_x-1:
                             if self.map_data[y][x+1].tileType != '█':
@@ -69,6 +69,9 @@ class Map():
                         print(f"{self.map_data[y][x].tileColour}{self.map_data[y][x].tileType}", end=f'█{colours.DEFAULT}')
                     else:
                         print(f"{self.map_data[y][x].tileColour}{self.map_data[y][x].tileType}{colours.DEFAULT}", end=' ')
+                    for entity in entity_list:
+                        if entity.x == x and entity.y == y and entity != character and entity.alive == True and self.map_data[y][x].tileType != '█':
+                            print(f"{entity.colour}{entity.icon}{colours.DEFAULT}", end=' ')
             print(f"{colours.RED}|{colours.DEFAULT}")
         print(frame)
 

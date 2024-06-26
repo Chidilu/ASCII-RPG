@@ -2,8 +2,7 @@ import colours
 from mapGeneration_module import get_map_Icon, get_Map_Descriptions, get_icon_colour, get_Map_Descriptions, get_walkable
 
 class Tile():
-    def __init__(self, x, y, tileName,
-                 isWalkable = True, isTransparent = False, isBlocking = False, isDoor = False, doorDirection = -1,
+    def __init__(self, x, y, tileName, isTransparent = False, isBlocking = False, isDoor = False, doorDirection = -1,
                  isStair = False, stairDirection = -1, isExit = False, exitDirection = -1, isItem = False, itemID = -1,
                  isNPC = False, nPCID = -1, isEvent = False, eventID = -1, isTrigger = False, triggerID = -1):
         self.x = x
@@ -12,7 +11,7 @@ class Tile():
         self.tileType = get_map_Icon(self.tileName)
         self.tileDescription = get_Map_Descriptions(self.tileName)
         self.tileColour = get_icon_colour(self.tileName)
-        self.isWalkable = isWalkable
+        self.isWalkable = get_walkable(self.tileName)
         self.isTransparent = isTransparent
         self.isBlocking = isBlocking
         self.isDoor = isDoor
