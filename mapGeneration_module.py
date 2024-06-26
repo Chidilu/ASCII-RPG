@@ -4,42 +4,49 @@ import colours
 _mapInfo = {
     'mountain': {
         'icon': '^',
+        'isWalkable': False,
         'elevation': 3,
         'description': "This is a mountain",
         'colour': "LIGHT_GRAY"
     },
     'forest': {
         'icon': '#',
+        'isWalkable': True,
         'elevation': 1,
         'description': "This is a forest",
         'colour': "GREEN"
     },
     'plain': {
         'icon': '.',
+        'isWalkable': True,
         'elevation': 1,
         'description': "This is a plain",
         'colour': "GREEN"
     },
     'water': {
         'icon': '~',
+        'isWalkable': False,
         'elevation': 0,
         'description': "This is water",
         'colour': "BLUE"
     },
     'road': {
         'icon': '-',
+        'isWalkable': True,
         'elevation': 1,
         'description': "This is a road",
         'colour': "WHITE"
     },
     'gate': {
         'icon': '▓',
+        'isWalkable': True,
         'elevation': 2,
         'description': "This is a gate",
         'colour': "WHITE"
     },
     'walls': {
         'icon': '█',
+        'isWalkable': False,
         'elevation': 2,
         'description': "This is a wall",
         'colour': "BLACK",
@@ -59,10 +66,8 @@ def get_icon_colour(tile):
 def get_Map_Descriptions(tile):
     return _mapInfo[tile]['description']
 
-def generate_World(tile):
-    if (tile.x < 7 and tile.x > 2) and (tile.y > 13 or tile.y < 7):
-        return 'mountain'
-    return tile.tileName
+def get_walkable(tile):
+    return _mapInfo[tile]['isWalkable']
 
 def get_bg_colour(tile):
     try:

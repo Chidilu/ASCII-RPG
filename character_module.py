@@ -1,6 +1,8 @@
 from os import error
 import colours
 import json
+import map_module
+import tile_module
 
 character_Icons = {
     'hero': {
@@ -41,9 +43,12 @@ class Character():
         self.file = 'character.json'
         self.inventory = inv
 
-    def move(self, x, y) -> None:
-        self.x += x
-        self.y += y
+    def move(self, x, y, map:map_module.Map) -> None:
+        if (x == +1 and map.map_data[self.y][self.x + 1].isWalkable) or (x == -1 and map.map_data[self.y][self.x - 1].isWalkable):
+            self.x += x
+        
+        if (y == +1 and map.map_data[self.y + 1][self.x].isWalkable) or (y == -1 and map.map_data[self.y - 1][self.x].isWalkable):
+            self.y += y
 
     def set_icon(self):
         self.colour = colours.DEFAULT

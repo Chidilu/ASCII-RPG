@@ -15,27 +15,27 @@ def main():
     hero: character_module.Character
 
     def show(key):
-        nonlocal menu, play
+        nonlocal menu, play, hero, map
         if hasattr(key, 'char'):
             key_char = key.char
             if key_char == 'w':
                 if hero.y > 0:
-                    hero.move(0, -1)
+                    hero.move(0, -1, map)
                     return False
                 else: return False
             elif key_char == 'a':
                 if hero.x > 0:
-                    hero.move(-1, 0)
+                    hero.move(-1, 0, map)
                     return False
                 else: return False
             elif key_char == 's':
                 if hero.y < map.height -1:
-                    hero.move(0, +1)
+                    hero.move(0, +1, map)
                     return False
                 else: return False
             elif key_char == 'd':
                 if hero.x < map.width -1:
-                    hero.move(1, 0)
+                    hero.move(1, 0, map)
                     return False   
                 else: return False     
             elif key_char == 'q':
@@ -50,22 +50,22 @@ def main():
                 return False
             elif key == Key.up:
                 if hero.y > 0:
-                    hero.move(0, -1)
+                    hero.move(0, -1, map)
                     return False
                 else: return False
             elif key == Key.left:
                 if hero.x > 0:
-                    hero.move(-1, 0)
+                    hero.move(-1, 0, map)
                     return False
                 else: return False
             elif key == Key.down:
                 if hero.y < map.height -1:
-                    hero.move(0, +1)
+                    hero.move(0, +1, map)
                     return False
                 else: return False
             elif key == Key.right:
                 if hero.x < map.width -1:
-                    hero.move(1, 0)
+                    hero.move(1, 0, map)
                     return False   
                 else: return False
             else: return False
@@ -183,8 +183,6 @@ def load_map() -> None:
                     for i in save_Tile_dict[y][x].items():
                         if i[0] == 'tileName':
                             tileName = i[1]
-                        elif i[0] == 'isWalkable':
-                            isWalkable = i[1]
                         elif i[0] == 'isTransparent':
                             isTransparent = i[1]
                         elif i[0] == 'isBlocking':
@@ -217,7 +215,7 @@ def load_map() -> None:
                             isTrigger = i[1]
                         elif i[0] == 'triggerID':
                             triggerID = i[1]
-                    map.set_tile(x, y, tileName, isWalkable, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, nPCID, isEvent,eventID, isTrigger, triggerID)
+                    map.set_tile(x, y, tileName, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, nPCID, isEvent,eventID, isTrigger, triggerID)
             return map
     
     # except FileNotFoundError as e:

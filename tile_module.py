@@ -1,6 +1,5 @@
 import colours
-from mapGeneration_module import get_map_Icon, get_Map_Descriptions, get_icon_colour, get_Map_Descriptions
-from mapGeneration_module import generate_World as map
+from mapGeneration_module import get_map_Icon, get_Map_Descriptions, get_icon_colour, get_Map_Descriptions, get_walkable
 
 class Tile():
     def __init__(self, x, y, tileName,
@@ -36,6 +35,7 @@ class Tile():
         self.tileDescription = get_Map_Descriptions(self.tileName)
         self.tileColour = get_icon_colour(self.tileName)
         self.tileDescription = get_Map_Descriptions(self.tileName)
+        self.isWalkable = get_walkable(self.tileName)
 
     def __dict__(self):
         return {
