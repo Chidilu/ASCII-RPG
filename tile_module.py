@@ -6,7 +6,7 @@ class Tile():
     def __init__(self, x, y, tileName,
                  isWalkable = True, isTransparent = False, isBlocking = False, isDoor = False, doorDirection = -1,
                  isStair = False, stairDirection = -1, isExit = False, exitDirection = -1, isItem = False, itemID = -1,
-                 isNPC = False, NPCID = -1, isEvent = False, eventID = -1, isTrigger = False, triggerID = -1):
+                 isNPC = False, nPCID = -1, isEvent = False, eventID = -1, isTrigger = False, triggerID = -1):
         self.x = x
         self.y = y
         self.tileName = tileName
@@ -25,7 +25,7 @@ class Tile():
         self.isItem = isItem
         self.itemID = itemID
         self.isNPC = isNPC
-        self.NPCID = NPCID
+        self.nPCID = nPCID
         self.isEvent = isEvent
         self.eventID = eventID
         self.isTrigger = isTrigger
@@ -56,7 +56,7 @@ class Tile():
             'isItem': self.isItem,
             'itemID': self.itemID,
             'isNPC': self.isNPC,
-            'NPCID': self.NPCID,
+            'nPCID': self.nPCID,
             'isEvent': self.isEvent,
             'eventID': self.eventID,
             'isTrigger': self.isTrigger,

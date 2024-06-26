@@ -1,5 +1,6 @@
 from os import error
 import colours
+import json
 
 character_Icons = {
     'hero': {
@@ -27,7 +28,7 @@ character_Icons = {
 class Character():
     global character_Icons
 
-    def __init__(self, name: str, type: str, x: int =0, y: int =0) -> None:
+    def __init__(self, name: str, type: str, x: int =0, y: int =0, inv = {}) -> None:
         self.type = type
         self.name = name
         self.x = x
@@ -37,6 +38,8 @@ class Character():
         self.health = 10
         self.attack = 1
         self.alive = True
+        self.file = 'character.json'
+        self.inventory = inv
 
     def move(self, x, y) -> None:
         self.x += x
@@ -52,3 +55,16 @@ class Character():
         if other.health <= 0:
             print(f"{other.name} has been defeated!")
             other.alive = False
+
+    def save_character(self) -> None:
+        with open(self.file, 'w') as f:
+            f.write(json.dumps(self.__dict__()))
+    
+    def __dict__(self):
+        return {
+            'name': self.name,
+            'type': self.type,
+            'x': self.x,
+            'y': self.y,
+            'inv': self.inventory
+        }

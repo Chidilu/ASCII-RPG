@@ -1,10 +1,7 @@
 import json
-import mapGeneration_module
 import tile_module
-import sys
 import colours
 import random
-import math
 
 class Map():
     def __init__(self, width: int, height: int) -> None:
@@ -17,33 +14,23 @@ class Map():
         self.map_data: list = []
         self.width: int = width
         self.height: int = height
-        self.load_map()
-    
-    def load_map(self) -> None:
-        try:
-            with open(self.file, 'r') as f:
-                self.map_data = json.load(f)
-                if self.width != len(self.map_data):
-                    self.make_map()
-        except FileNotFoundError as e:
-            print(e)
-            self.make_map()
-        except json.JSONDecodeError as e:
-            print(f"Error parsing JSON: {e}")
-            sys.exit()
-        except Exception as e:
-            print(f"Error initializing map: {e}")
-            sys.exit()
-        
+        self.make_map()
 
     def save_map(self) -> None:
-        x = self.to_json(self.map_data)
         with open(self.file, 'w') as f:
-            json.dump(x, f)
+            f.write(json.dumps(self.__dict__()))
 
     def make_map(self) -> None:
         self.map_data = [[tile_module.Tile(k, i, 'plain') for k in range(self.width)] for i in range(self.height)]
-        self.save_map()
+    
+    def set_tile(self, x, y, tileName, isWalkable, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID):
+        if x < 0 or y < 0 or x >= self.width or y >= self.height:
+            raise ValueError("Tile coordinates out of bounds")
+        self.map_data[y][x] = tile_module.Tile(x, y, tileName, isWalkable, isTransparent, isBlocking, isDoor, doorDirection, isStair, stairDirection, isExit, exitDirection, isItem, itemID, isNPC, NPCID, isEvent, eventID, isTrigger, triggerID)
+
+    def get_description(self, character):
+        print(f"{self.map_data[character.y][character.x].tileDescription}")
+
 
     def display_map(self, character) -> None:
         char_x = character.x
@@ -84,13 +71,6 @@ class Map():
                         print(f"{self.map_data[y][x].tileColour}{self.map_data[y][x].tileType}{colours.DEFAULT}", end=' ')
             print(f"{colours.RED}|{colours.DEFAULT}")
         print(frame)
-    
-    def get_description(self, character):
-        print(f"{self.map_data[character.y][character.x].tileDescription}")
-
-    def to_json(self, obj):
-        return json.dumps(obj, default=lambda obj: obj.__dict__)
-
 
 
 
@@ -138,3 +118,10 @@ class Map():
             if 0 <= x < self.width and 0 <= y < self.height:
                 self.map_data[y][x].tileName = biome_name
                 self.map_data[y][x].update_tile()
+    
+    def __dict__(self):
+        return {
+            'width': self.width,
+            'height': self.height,
+            'map_data': [[tile.__dict__() for tile in row] for row in self.map_data]
+        }
