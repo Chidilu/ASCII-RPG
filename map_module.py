@@ -16,8 +16,9 @@ class Map():
         self.height: int = height
         self.make_map()
 
-    def save_map(self) -> None:
-        with open(self.file, 'w') as f:
+    def save_map(self, hero) -> None:
+        save = 'saves/map/map_' + hero.file
+        with open(save, 'w') as f:
             f.write(json.dumps(self.__dict__()))
 
     def make_map(self) -> None:

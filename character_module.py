@@ -78,7 +78,8 @@ class Character():
             input("Press Enter to continue...")
 
     def save_character(self) -> None:
-        with open(self.file, 'w') as f:
+        save = 'saves/player/' + self.file
+        with open(save, 'w') as f:
             f.write(json.dumps(self.__dict__()))
     
     def __dict__(self):

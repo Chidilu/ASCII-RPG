@@ -5,6 +5,7 @@ import map_module
 import character_module, player_module, fight_module
 import json
 import sys
+from pathlib import Path
 
 def main():
     menu = True
@@ -91,6 +92,7 @@ def main():
 
             if choice == "1" and not play_Menu:
                 os.system('cls')
+                generate_dir()
                 name = input(f"{colours.PURPLE}What is your name, hero?{colours.DEFAULT}\n> ")
                 if name == "":
                     name = f"Hero"
@@ -102,7 +104,7 @@ def main():
                 hero.save_character()
                 map.make_map()
                 generate_new_map(map)
-                map.save_map()
+                map.save_map(hero)
                 continue
             elif choice == "1" and play_Menu:
                 play = True
@@ -121,7 +123,7 @@ def main():
                     print("No save found")
                     input()
             elif choice == '3' and play_Menu:
-                map.save_map()
+                map.save_map(hero)
                 hero.save_character()
             elif choice == "9":
                 quit()
@@ -160,6 +162,14 @@ def generate_new_map(map):
     map.create_biome_patch('gate', 'rectangle', 40, 45, [1, 1])
     map.create_biome_patch('plain', 'rectangle', 41, 41, [3, 81])
 
+def generate_dir():
+    try:
+        Path('saves/player').mkdir(parents=True, exist_ok=True)
+        Path('saves/map').mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        input(e)
+
+
 def load_character():
     file = 'hero.json'
     try:
@@ -185,7 +195,7 @@ def load_character():
         sys.exit()
 
 def load_map() -> None:
-    file = 'map.json'
+    file = 'map_hero.json'
     try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)
@@ -241,7 +251,7 @@ def load_map() -> None:
     
     except FileNotFoundError as e:
         print(e)
-        map.make_map()
+        sys.exit()
     except json.JSONDecodeError as e:
         print(f"Error parsing JSON: {e}")
         sys.exit()
