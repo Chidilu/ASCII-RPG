@@ -19,6 +19,8 @@ class Player(character_module.Character):
     
     def __dict__(self):
         return {
+            'x': self.x,
+            'y': self.y,
             'name': self.name,
             'health': self.health,
             'damage': self.damage,

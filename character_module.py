@@ -33,13 +33,13 @@ class Character():
 
     def __init__(self, name: str, type: str, x: int =0, y: int =0, gold =0, inv = {}, health = 10, damage = 1, defense = 0) -> None:
         self.type = type
+        self.file = name.lower() + '.json'
         self.x = x
         self.y = y
         self.colour = colours.colours_dict[character_Icons[self.type]['colour']]
         self.name = f"{self.colour}{name}{colours.DEFAULT}"
         self.icon = character_Icons[self.type]['icon']
         self.alive = True
-        self.file = 'character.json'
         self.gold = gold
         self.inventory = inv
         self.health = health

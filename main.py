@@ -93,7 +93,7 @@ def main():
                 os.system('cls')
                 name = input(f"{colours.PURPLE}What is your name, hero?{colours.DEFAULT}\n> ")
                 if name == "":
-                    name = f"{colours.PURPLE}Hero{colours.DEFAULT}"
+                    name = f"Hero"
                 map = map_module.Map(50, 50)
                 hero = player_module.Player(name)
                 play = True
@@ -103,19 +103,21 @@ def main():
                 map.make_map()
                 generate_new_map(map)
                 map.save_map()
+                continue
             elif choice == "1" and play_Menu:
                 play = True
                 menu = False
                 continue
             elif choice == "2":
-                # try:
+                try:
                     # Load
                     hero = load_character()
                     map = load_map()
                     play = True
                     menu = False
+                    play_Menu = True
                     continue
-                # except:
+                except:
                     print("No save found")
                     input()
             elif choice == '3' and play_Menu:
@@ -126,9 +128,12 @@ def main():
 
         while play:
             for i in entity_list:
-                if hero.x == i.x and hero.y == i.y:
-                    enemy = i
-                    fight = True
+                if i.alive:
+                    if hero.x == i.x and hero.y == i.y:
+                        enemy = i
+                        fight = True
+                else:
+                    entity_list.remove(i)
             if fight:
                 os.system('cls')
                 fight = fight_module.fighting(hero, enemy)
@@ -144,7 +149,6 @@ def create_entities():
     entity_list = []
     entity_list.append(character_module.Character('Goblin', 'goblin', 10, 10, 5, {'sword': 1}))
     entity_list.append(character_module.Character('Goblin', 'goblin', 10, 11, 5, {'sword': 1}))
-    
     entity_list.append(character_module.Character('Orc', 'orc', 5, 4, 20, health= 20, damage= 2))
 
     return entity_list
@@ -157,7 +161,7 @@ def generate_new_map(map):
     map.create_biome_patch('plain', 'rectangle', 41, 41, [3, 81])
 
 def load_character():
-    file = 'player.json'
+    file = 'hero.json'
     try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)
