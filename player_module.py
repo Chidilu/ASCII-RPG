@@ -1,7 +1,7 @@
 import character_module
 
 class Player(character_module.Character):
-    def __init__(self, name, x = 5, y = 5, health =10, damage =1, defense =0, speed =10, luck =5, gold =0
+    def __init__(self, name, x = 5, y = 5, health =10, damage =5, defense =0, speed =10, luck =5, gold =0
                  ,inventory ={}, skills ={}, level =0, experience =0, max_health =100, max_damage =100
                  ,max_defense =100, max_speed =100, max_luck =90, max_gold =100):
         super().__init__(name, 'hero', x, y, gold, inventory, health, damage, defense)

@@ -2,11 +2,11 @@ import os
 import sys
 import player_module, enemy_module
 
-def fighting(player, enemy):
+def fighting(player, enemy, map):
         os.system('cls')
         while True:
-            print(f"Player's health: {player.health}")
-            print(f"Enemy's health: {enemy.health}")
+            print(f"{player.name}'s health: {player.health}")
+            print(f"{enemy.name}'s health: {enemy.health}")
 
             print("What do you want to do?")
             print("1. Attack")
@@ -23,6 +23,7 @@ def fighting(player, enemy):
             if enemy.health <= 0:
                 input(f"{enemy.name} has been defeated")
                 player.looting(enemy)
+                map.setEvent_flag(player, False)
                 return False
 
             x = enemy.attack(player)

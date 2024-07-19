@@ -33,7 +33,7 @@ class Map():
         print(f"{self.map_data[character.y][character.x].tileDescription}")
 
 
-    def display_map(self, character, entity_list) -> None:
+    def display_map(self, character) -> None:
         char_x = character.x
         char_y = character.y
         start_x = max(char_x - 2, 0)
@@ -70,9 +70,6 @@ class Map():
                         print(f"{self.map_data[y][x].tileColour}{self.map_data[y][x].tileType}", end=f'█{colours.DEFAULT}')
                     else:
                         print(f"{self.map_data[y][x].tileColour}{self.map_data[y][x].tileType}{colours.DEFAULT}", end=' ')
-                    for entity in entity_list:
-                        if entity.x == x and entity.y == y and entity != character and entity.alive == True and self.map_data[y][x].tileType != '█':
-                            print(f"{entity.colour}{entity.icon}{colours.DEFAULT}", end=' ')
             print(f"{colours.RED}|{colours.DEFAULT}")
         print(frame)
 
@@ -122,6 +119,23 @@ class Map():
             if 0 <= x < self.width and 0 <= y < self.height:
                 self.map_data[y][x].tileName = biome_name
                 self.map_data[y][x].update_tile()
+
+    def set_Tile_name(self, x = 7, y = 7, name = "goblin"):
+        self.map_data[y][x].setName(name)
+
+    def event(self, hero):
+        hero_x = hero.x
+        hero_y = hero.y
+
+        if self.map_data[hero_y][hero_x].getEvent():
+            return "fight"
+        return None
+
+    def setEvent_flag(self, hero, event):
+        self.map_data[hero.y][hero.x].setEvent_flag(event)
+    
+    def getEnemy(self, hero):
+        return "goblin"
     
     def __dict__(self):
         return {

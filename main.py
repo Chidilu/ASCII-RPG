@@ -16,7 +16,6 @@ def main():
 
     map: map_module.Map
     hero: player_module.Player
-    entity_list = create_entities()
 
     def show(key):
         nonlocal menu, play, hero, map
@@ -105,6 +104,8 @@ def main():
                 map.make_map()
                 generate_new_map(map)
                 map.save_map(hero)
+                map.set_Tile_name()
+                enemy = character_module.Character("Goblin", map.getEnemy(hero), 5, 5, 50)
                 continue
             elif choice == "1" and play_Menu:
                 play = True
@@ -129,31 +130,19 @@ def main():
                 quit()
 
         while play:
-            for i in entity_list:
-                if i.alive:
-                    if hero.x == i.x and hero.y == i.y:
-                        enemy = i
-                        fight = True
-                else:
-                    entity_list.remove(i)
+            if map.event(hero) == "fight":
+                os.system('cls')
+                fight = True
+
             if fight:
                 os.system('cls')
-                fight = fight_module.fighting(hero, enemy)
+                fight = fight_module.fighting(hero, enemy, map)
             os.system('cls')
-            map.display_map(hero, entity_list)
+            map.display_map(hero)
             print(f"{colours.YELLOW}Your Position: X={hero.x} Y={hero.y}{colours.DEFAULT}")
             map.get_description(hero)
             with Listener(on_press = show, suppress= True) as listener:
                 listener.join()
-
-def create_entities():
-    entity_list: list[character_module.Character]
-    entity_list = []
-    entity_list.append(character_module.Character('Goblin', 'goblin', 10, 10, 5, {'sword': 1}))
-    entity_list.append(character_module.Character('Goblin', 'goblin', 10, 11, 5, {'sword': 1}))
-    entity_list.append(character_module.Character('Orc', 'orc', 5, 4, 20, health= 20, damage= 2))
-
-    return entity_list
 
 def generate_new_map(map):
     map.create_biome_patch("forest", 'blob', 5, 5, 10)

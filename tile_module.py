@@ -1,5 +1,6 @@
 import colours
 from mapGeneration_module import get_map_Icon, get_Map_Descriptions, get_icon_colour, get_Map_Descriptions, get_walkable
+from NPCGeneration_module import get_NPC_Icon, get_NPC_description, get_NPC_colour
 
 class Tile():
     def __init__(self, x, y, tileName, isTransparent = False, isBlocking = False, isDoor = False, doorDirection = -1,
@@ -8,10 +9,7 @@ class Tile():
         self.x = x
         self.y = y
         self.tileName = tileName
-        self.tileType = get_map_Icon(self.tileName)
-        self.tileDescription = get_Map_Descriptions(self.tileName)
-        self.tileColour = get_icon_colour(self.tileName)
-        self.isWalkable = get_walkable(self.tileName)
+        self.NPCName = ''
         self.isTransparent = isTransparent
         self.isBlocking = isBlocking
         self.isDoor = isDoor
@@ -28,13 +26,46 @@ class Tile():
         self.eventID = eventID
         self.isTrigger = isTrigger
         self.triggerID = triggerID
+        self.isEvent = self.checkEvent()
+        if self.isEvent and self.NPCName != '':
+            self.tileType = get_NPC_Icon(self.NPCName)
+            self.tileDescription = get_NPC_description(self.NPCName)
+            self.tileColour = get_NPC_colour(self.NPCName)
+        else:
+            self.tileType = get_map_Icon(self.tileName)
+            self.tileDescription = get_Map_Descriptions(self.tileName)
+            self.tileColour = get_icon_colour(self.tileName)
+        self.isWalkable = get_walkable(self.tileName)
 
     def update_tile(self):
-        self.tileType = get_map_Icon(self.tileName)
-        self.tileDescription = get_Map_Descriptions(self.tileName)
-        self.tileColour = get_icon_colour(self.tileName)
-        self.tileDescription = get_Map_Descriptions(self.tileName)
+        if self.isEvent and self.NPCName != '':
+            self.tileType = get_NPC_Icon(self.NPCName)
+            self.tileDescription = get_NPC_description(self.NPCName)
+            self.tileColour = get_NPC_colour(self.NPCName)
+        else:
+            self.tileType = get_map_Icon(self.tileName)
+            self.tileDescription = get_Map_Descriptions(self.tileName)
+            self.tileColour = get_icon_colour(self.tileName)
         self.isWalkable = get_walkable(self.tileName)
+
+    def setName(self, name:str):
+        self.NPCName = name
+        self.update_tile()
+    
+    def setEvent_flag(self, event):
+        self.isEvent = event
+        self.update_tile()
+
+    def checkEvent(self):
+        if self.x == 7 and self.y == 7:
+            return True
+        return False
+
+        if self.isDoor or self.isStair or self.isExit:
+            return True
+
+    def getEvent(self):
+        return self.isEvent
 
     def __dict__(self):
         return {
