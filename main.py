@@ -3,6 +3,7 @@ from pynput.keyboard import Key, Listener
 import colours
 import map_module
 import character_module, player_module, fight_module
+from enemy_module import setEnemyLocations
 import json
 import sys
 from pathlib import Path
@@ -13,6 +14,9 @@ def main():
     play_Menu = False
     fight = False
     enemy: character_module.Character
+
+    MAPX = 50
+    MAPY = 50
 
     map: map_module.Map
     hero: player_module.Player
@@ -90,12 +94,14 @@ def main():
             choice = input(f"{colours.DEFAULT}\n# ")
 
             if choice == "1" and not play_Menu:
+                # Start
                 os.system('cls')
                 generate_dir()
                 name = input(f"{colours.PURPLE}What is your name, hero?{colours.DEFAULT}\n> ")
                 if name == "":
                     name = f"Hero"
-                map = map_module.Map(50, 50)
+                map = map_module.Map(MAPX, MAPY)
+                setEnemyLocations([MAPX, MAPY])
                 hero = player_module.Player(name)
                 play = True
                 menu = False
@@ -104,10 +110,9 @@ def main():
                 map.make_map()
                 generate_new_map(map)
                 map.save_map(hero)
-                map.set_Tile_name()
-                enemy = character_module.Character("Goblin", map.getEnemy(hero), 5, 5, 50)
                 continue
             elif choice == "1" and play_Menu:
+                # Continue
                 play = True
                 menu = False
                 continue
@@ -124,13 +129,22 @@ def main():
                     print("No save found")
                     input()
             elif choice == '3' and play_Menu:
+                # Save
                 map.save_map(hero)
                 hero.save_character()
             elif choice == "9":
+                # Quit
+                os.system('cls')
                 quit()
 
         while play:
-            if map.event(hero) == "fight":
+            if map.getEnemy(hero) != None:
+                tempEnemy = map.getEnemy(hero)
+                enemy = character_module.Character(tempEnemy[0], tempEnemy[1])
+            else:
+                enemy = None
+            
+            if map.event(hero) == "fight" and enemy != None:
                 os.system('cls')
                 fight = True
 
@@ -146,6 +160,10 @@ def main():
 
 def generate_new_map(map):
     map.create_biome_patch("forest", 'blob', 5, 5, 10)
+    map.create_biome_patch("forest", 'blob', 45, 5, 7)
+    map.create_biome_patch("forest", 'circle', 15, 45, 4)
+    map.create_biome_patch("forest", 'blob', 25, 35, 13)
+    map.create_biome_patch("mountain", 'blob', 15, 20, 5)
     map.create_biome_patch("mountain", 'circle', 20, 5, 5)
     map.create_biome_patch('walls', 'rectangle', 40, 40, [5, 10])
     map.create_biome_patch('gate', 'rectangle', 40, 45, [1, 1])
@@ -155,12 +173,13 @@ def generate_dir():
     try:
         Path('saves/player').mkdir(parents=True, exist_ok=True)
         Path('saves/map').mkdir(parents=True, exist_ok=True)
+        Path('saves/enemy').mkdir(parents=True, exist_ok=True)
     except Exception as e:
         input(e)
 
 
 def load_character():
-    file = 'hero.json'
+    file = 'saves/player/hero.json'
     try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)
@@ -184,7 +203,7 @@ def load_character():
         sys.exit()
 
 def load_map() -> None:
-    file = 'map_hero.json'
+    file = 'saves/map/map_hero.json'
     try:
         with open(file, 'r') as f:
             save_Dict: dict = json.load(f)

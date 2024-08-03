@@ -2,6 +2,7 @@ import json
 import tile_module
 import colours
 import random
+from enemy_module import getEnemyLocations, removeEnemyLocation, getEnemyNames
 
 class Map():
     def __init__(self, width: int, height: int) -> None:
@@ -120,9 +121,6 @@ class Map():
                 self.map_data[y][x].tileName = biome_name
                 self.map_data[y][x].update_tile()
 
-    def set_Tile_name(self, x = 7, y = 7, name = "goblin"):
-        self.map_data[y][x].setName(name)
-
     def event(self, hero):
         hero_x = hero.x
         hero_y = hero.y
@@ -131,11 +129,18 @@ class Map():
             return "fight"
         return None
 
-    def setEvent_flag(self, hero, event):
+    def setEvent_flag(self, hero, event): # Comes from fighting Module, to set to false after fight
+        removeEnemyLocation([hero.x, hero.y])
         self.map_data[hero.y][hero.x].setEvent_flag(event)
     
     def getEnemy(self, hero):
-        return "goblin"
+        heroPosition = [hero.x, hero.y]
+        enemyPosition = getEnemyLocations()
+        enemyname = getEnemyNames()
+        for i in range(len(enemyPosition)):
+            if enemyPosition[i] == heroPosition:
+                return "Brucka", enemyname[i]
+        return None
     
     def __dict__(self):
         return {

@@ -18,6 +18,12 @@ _npcInfo = {
         "description": "A goblin that has jumped you to steal your loot.",
         "icon": "G",
         "colour": 'RED'
+        },
+    "orc": {
+        "name": "Orc",
+        "description": "A strong and fierce orc that will attack you on sight.",
+        "icon": "O",
+        "colour": 'GREEN'
         }
 }
 
